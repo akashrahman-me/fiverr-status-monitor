@@ -36,14 +36,18 @@ if all([proxy_username, proxy_password, proxy_host, proxy_port]):
         "https": proxy_url
     }
 
-r = requests.get(url, headers=headers, proxies=proxies)
+# Retry logic: try up to 5 times
+MAX_RETRIES = 5
 status = "ERROR"
 
-try:
-    status = r.json()["is_online"]
-    status = "ONLINE" if status else "OFFLINE"
-except (JSONDecodeError, KeyError) as e:
-    pass
+for attempt in range(1, MAX_RETRIES + 1):
+    try:
+        r = requests.get(url, headers=headers, proxies=proxies, timeout=10)
+        status = r.json()["is_online"]
+        status = "ONLINE" if status else "OFFLINE"
+        break  # Success, exit the retry loop
+    except (JSONDecodeError, KeyError, requests.RequestException) as e:
+        pass
 
 # Get current time in Bangladesh timezone (Asia/Dhaka)
 bd_timezone = pytz.timezone('Asia/Dhaka')
