@@ -2,7 +2,8 @@ from json import JSONDecodeError
 
 import requests
 import csv
-from datetime import datetime, timezone
+from datetime import datetime
+import pytz
 
 username = "akash_codespace"
 
@@ -21,7 +22,10 @@ try:
 except (JSONDecodeError, KeyError) as e:
     pass
 
+# Get current time in Bangladesh timezone (Asia/Dhaka)
+bd_timezone = pytz.timezone('Asia/Dhaka')
+bd_time = datetime.now(bd_timezone)
 
 with open("status.csv", "a", newline="") as f:
     w = csv.writer(f)
-    w.writerow([datetime.now(timezone.utc).isoformat(), status])
+    w.writerow([bd_time.isoformat(), status])
