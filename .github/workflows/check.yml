@@ -2,7 +2,7 @@ name: Check API status
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,13 @@ jobs:
 
       - name: Run script
         run: |
-          python main.py
+          python status.py
+          python visualize.py
+        env:
+          PROXY_USERNAME: ${{ secrets.PROXY_USERNAME }}
+          PROXY_PASSWORD: ${{ secrets.PROXY_PASSWORD }}
+          PROXY_HOST: ${{ secrets.PROXY_HOST }}
+          PROXY_PORT: ${{ secrets.PROXY_PORT }}
 
       - name: Commit changes
         run: |
