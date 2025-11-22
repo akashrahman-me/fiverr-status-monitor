@@ -21,7 +21,7 @@ color_map = {"ONLINE": "#10B981", "ERROR": "#F59E0B", "OFFLINE": "#EF4444"}
 # Group data by hour
 hourly_data = {}
 for ts, status in zip(timestamps, statuses):
-    hour_key = ts.strftime('%H:00')
+    hour_key = ts.strftime('%Y-%m-%d %H:00')  # Include date to avoid mixing different days
     if hour_key not in hourly_data:
         hourly_data[hour_key] = []
     hourly_data[hour_key].append((ts, status))
